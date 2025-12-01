@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocoTotal - Gestor de Estudos</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <i class="ph-fill ph-student" style="font-size: 2rem; color: var(--accent);"></i>
+            <h1>FocoTotal</h1>
+        </div>
+        <div id="user-info" style="display: none;">
+            <div class="user-badge">
+                <i class="ph ph-user-circle"></i>
+                <span id="username-display"></span>
+            </div>
+            <button id="btn-logout" class="btn-logout" title="Sair"><i class="ph ph-sign-out"></i></button>
+        </div>
+    </header>
+
+    <!-- Auth Container -->
+    <div id="auth-container" class="auth-wrapper">
+        <div class="container-login" id="container-login">
+            
+            <!-- Sign Up Form (Cadastro) -->
+            <div class="form-container sign-up-container">
+                <form id="form-register">
+                    <h1>Criar Conta</h1>
+                    <div class="social-container">
+                        <a href="#" class="social"><i class="ph ph-facebook-logo"></i></a>
+                        <a href="#" class="social"><i class="ph ph-google-logo"></i></a>
+                        <a href="#" class="social"><i class="ph ph-linkedin-logo"></i></a>
+                    </div>
+                    <span>ou use seu email para registro</span>
+                    <input type="text" id="register-username" placeholder="Nome" required />
+                    <input type="email" id="register-email" placeholder="Email" required />
+                    <input type="password" id="register-password" placeholder="Senha" required />
+                    <button type="submit">Cadastrar</button>
+                </form>
+            </div>
+
+            <!-- Sign In Form (Login) -->
+            <div class="form-container sign-in-container">
+                <form id="form-login">
+                    <h1>Entrar</h1>
+                    <div class="social-container">
+                        <a href="#" class="social"><i class="ph ph-facebook-logo"></i></a>
+                        <a href="#" class="social"><i class="ph ph-google-logo"></i></a>
+                        <a href="#" class="social"><i class="ph ph-linkedin-logo"></i></a>
+                    </div>
+                    <span>ou use sua conta</span>
+                    <input type="text" id="login-username" placeholder="Usuário" required />
+                    <input type="password" id="login-password" placeholder="Senha" required />
+                    <a href="#" class="forgot-pass">Esqueceu sua senha?</a>
+                    <button type="submit">Entrar</button>
+                </form>
+            </div>
+
+            <!-- Overlay Container -->
+            <div class="overlay-container">
+                <div class="overlay">
+                    <div class="overlay-panel overlay-left">
+                        <h1>Bem-vindo de volta!</h1>
+                        <p>Para se manter conectado conosco, faça login com suas informações pessoais</p>
+                        <button class="ghost" id="signIn">Entrar</button>
+                    </div>
+                    <div class="overlay-panel overlay-right">
+                        <h1>Olá, Amigo!</h1>
+                        <p>Insira seus dados pessoais e comece sua jornada conosco</p>
+                        <button class="ghost" id="signUp">Cadastrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- App Container (Hidden by default) -->
+    <main id="app-container" class="container" style="display: none;">
+
+        <section class="coluna-materias">
+            <h2>Minhas Matérias</h2>
+            
+            <form id="form-nova-materia">
+                <input type="text" id="nome-materia" placeholder="Nome da Matéria" required>
+                <input type="text" id="nome-professor" placeholder="Nome do Professor (Opcional)">
+                <button type="submit">Adicionar</button>
+            </form>
+            
+            <div id="lista-materias">
+                <p>A carregar matérias...</p>
+            </div>
+        </section>
+
+        <section class="coluna-detalhes" id="detalhes-materia">
+            <div class="detalhes-header">
+                <div>
+                    <h2>Detalhes da Matéria</h2>
+                    <h3 id="detalhe-nome-materia">Selecione uma matéria</h3>
+                    <p id="detalhe-nome-professor"></p>
+                </div>
+                <button id="btn-apagar-materia" class="btn-perigo" disabled>Apagar matéria</button>
+            </div>
+
+            <hr>
+
+            <!-- Tabs Navigation -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="tab-resumo">Resumo</button>
+                <button class="tab-btn" data-tab="tab-tarefas">Tarefas</button>
+                <button class="tab-btn" data-tab="tab-metas">Metas</button>
+                <button class="tab-btn" data-tab="tab-anotacoes">Anotações</button>
+                <button class="tab-btn" data-tab="tab-recursos">Recursos</button>
+            </div>
+
+            <!-- Tab Content: Resumo -->
+            <div id="tab-resumo" class="tab-content active">
+                <div id="sumario-estudo">
+                    <h4>Tempo Total de Estudo</h4>
+                    <p id="tempo-total">0 minutos</p>
+                    <p id="pontos-foco">Score de foco: 0 pontos</p>
+                    <h5>Histórico de Sessões:</h5>
+                    <ul id="lista-sessoes">
+                        <li>Nenhuma sessão registada.</li>
+                    </ul>
+                </div>
+
+                <div id="nova-sessao" class="card-form">
+                    <h4>Registrar nova sessão</h4>
+                    <form id="form-nova-sessao">
+                        <input type="number" id="duracao-minutos" placeholder="Duração (minutos)" required min="1">
+                        <input type="datetime-local" id="data-sessao" placeholder="Data e hora da sessão (opcional)">
+                        <input type="text" id="descricao-sessao" placeholder="O que foi estudado? (opcional)">
+                        <button type="submit">Registrar sessão</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tab Content: Tarefas -->
+            <div id="tab-tarefas" class="tab-content">
+                <h4>Lista de Tarefas</h4>
+                <ul id="lista-tarefas" class="task-list">
+                    <li>Nenhuma tarefa.</li>
+                </ul>
+                <div class="card-form">
+                    <form id="form-nova-tarefa">
+                        <input type="text" id="descricao-tarefa" placeholder="Nova tarefa..." required>
+                        <button type="submit">Adicionar Tarefa</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tab Content: Metas -->
+            <div id="tab-metas" class="tab-content">
+                <h4>Metas de Estudo</h4>
+                <ul id="lista-metas">
+                    <li>Nenhuma meta definida.</li>
+                </ul>
+                <div class="card-form">
+                    <form id="form-nova-meta">
+                        <input type="number" id="horas-alvo" placeholder="Horas alvo" required>
+                        <select id="periodo-meta" class="input-select">
+                            <option value="semanal">Semanal</option>
+                            <option value="mensal">Mensal</option>
+                        </select>
+                        <button type="submit">Definir Meta</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tab Content: Anotações -->
+            <div id="tab-anotacoes" class="tab-content">
+                <h4>Anotações Rápidas</h4>
+                <div id="lista-anotacoes" class="notes-grid">
+                    <!-- Notes will be injected here -->
+                </div>
+                <div class="card-form">
+                    <form id="form-nova-anotacao">
+                        <textarea id="conteudo-anotacao" placeholder="Escreva sua anotação..." rows="3" required></textarea>
+                        <button type="submit">Salvar Anotação</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tab Content: Recursos -->
+            <div id="tab-recursos" class="tab-content">
+                <div id="recursos">
+                    <h4>Recursos</h4>
+                    <ul id="lista-recursos">
+                        <li>Nenhum recurso adicionado.</li>
+                    </ul>
+                </div>
+
+                <div id="novo-recurso" class="card-form">
+                    <h4>Adicionar recurso</h4>
+                    <form id="form-novo-recurso">
+                        <input type="text" id="titulo-recurso" placeholder="Título do recurso" required>
+                        <input type="url" id="link-recurso" placeholder="Link (URL)" required>
+                        <button type="submit">Adicionar recurso</button>
+                    </form>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="app.js?v=2" defer></script>
+</body>
+</html>
